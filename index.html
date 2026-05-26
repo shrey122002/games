@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Game for Shalu</title>
+    <style>
+        /* Tom & Jerry inspired classic cartoon styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #fcd34d 20%, #b45309 80%); /* Classic cartoon iris background */
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            background-color: #fffbeb;
+            border: 8px solid #78350f;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0px 10px 0px #451a03;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #b45309;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 0px #fde68a;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            color: #78350f;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            background-color: #38bdf8;
+            color: white;
+            border: 4px solid #0369a1;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 5px 0px #0369a1;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0px 0px 0px #0369a1;
+        }
+
+        /* Option B button styling */
+        .btn-alt {
+            background-color: #fb7185;
+            border-color: #be123c;
+            box-shadow: 0px 5px 0px #be123c;
+        }
+        .btn-alt:active {
+            box-shadow: 0px 0px 0px #be123c;
+        }
+
+        /* Next Button after animation completes */
+        .btn-next {
+            background-color: #22c55e;
+            border-color: #15803d;
+            box-shadow: 0px 5px 0px #15803d;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .btn-next:active {
+            box-shadow: 0px 0px 0px #15803d;
+        }
+
+        /* Animation Display Area */
+        .animation-zone {
+            font-size: 5rem;
+            height: 120px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* CSS Animations */
+        .butterfly {
+            display: inline-block;
+            animation: fly 1s ease-in-out infinite alternate;
+        }
+
+        .wilt {
+            display: inline-block;
+            animation: droop 1.2s forwards;
+            transform-origin: bottom center;
+        }
+
+        @keyframes fly {
+            0% { transform: translateY(0) scaleX(1) rotate(0deg); }
+            50% { transform: translateY(-15px) scaleX(0.5) rotate(5deg); }
+            100% { transform: translateY(-30px) scaleX(1) rotate(-5deg); }
+        }
+
+        @keyframes droop {
+            0% { transform: rotate(0deg); opacity: 1; }
+            50% { transform: rotate(25deg); }
+            100% { transform: rotate(70deg) translateY(20px); opacity: 0.5; }
+        }
+
+        /* Letter Styling for the Final Page */
+        .final-letter {
+            text-align: left;
+            color: #451a03;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            background-color: #fffdec;
+            border-left: 5px solid #b45309;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            white-space: pre-line; /* Keeps your spacing intact */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 id="game-title">Hi Shalu! ✨</h1>
+        <p class="question-text" id="question-text">Loading game...</p>
+        
+        <div class="btn-container" id="options-container">
+            <!-- Buttons dynamically injected here -->
+        </div>
+
+        <div class="animation-zone" id="animation-zone"></div>
+        
+        <div id="next-container">
+            <!-- Next button injected here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Game Questions Database
+        const questions = [
+            {
+                question: "How are you Shalu?",
+                options: [
+                    { text: "a) I am jhakaas", type: "yes" },
+                    { text: "b) I am okay", type: "no" }
+                ]
+            },
+            {
+                question: "Is Shreyan a good friend?",
+                options: [
+                    { text: "a) Yes", type: "yes" },
+                    { text: "b) No bolne me sharm nai aai", type: "no" }
+                ]
+            },
+            {
+                question: "Do you miss me?",
+                options: [
+                    { text: "a) Yes", type: "yes" },
+                    { text: "b) Yesssss", type: "yes" } // Both lead to butterfly since they both mean yes!
+                ]
+            },
+            {
+                question: "Shalini is a good human being",
+                options: [
+                    { text: "a) Yes", type: "yes" },
+                    { text: "b) I am not poorav", type: "no" }
+                ]
+            },
+            {
+                question: "Why is Shalini not sending reels anymore?",
+                options: [
+                    { text: "a) Too lazy", type: "yes" },
+                    { text: "b) Shreyan tu paagal hai", type: "no" }
+                ]
+            },
+            {
+                question: "We will stay friends till the end right? No Poorav, no Sayna, no anyone will stop us right?",
+                options: [
+                    { text: "a) Yes, absolutely!", type: "yes" },
+                    { text: "b) No one can stop us", type: "yes" } // Friendly safety override so she answers positively!
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // Core Function to Render Questions
+        function loadQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const currentQ = questions[currentQuestionIndex];
+                
+                // Update header text based on question progression
+                document.getElementById('game-title').innerText = `Question ${currentQuestionIndex + 1} 🎬`;
+                document.getElementById('question-text').innerText = currentQ.question;
+                
+                // Clear animation and next containers
+                document.getElementById('animation-zone').innerHTML = '';
+                document.getElementById('next-container').innerHTML = '';
+                
+                // Build options buttons
+                const optionsContainer = document.getElementById('options-container');
+                optionsContainer.style.display = 'flex';
+                optionsContainer.innerHTML = '';
+                
+                currentQ.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.innerText = opt.text;
+                    // Class variation to keep the color setup consistent
+                    btn.className = idx === 0 ? "btn" : "btn btn-alt";
+                    btn.onclick = () => handleSelection(opt.type);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                showFinalLetter();
+            }
+        }
+
+        // Handle Animation Responses
+        function handleSelection(type) {
+            // Hide selection buttons
+            document.getElementById('options-container').style.display = 'none';
+            const animationZone = document.getElementById('animation-zone');
+            
+            if (type === 'yes') {
+                animationZone.innerHTML = `
+                    <span class="butterfly">🦋</span>
+                    <span class="butterfly" style="animation-delay: 0.2s">🦋</span>
+                    <span class="butterfly" style="animation-delay: 0.4s">🦋</span>
+                `;
+            } else {
+                animationZone.innerHTML = `<span class="wilt">🥀</span>`;
+            }
+
+            // Injects the next action handler button
+            const nextContainer = document.getElementById('next-container');
+            const nextBtn = document.createElement('button');
+            nextBtn.className = "btn btn-next";
+            nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? "Read Message From Shreyan ❤️" : "Next Question ▶";
+            nextBtn.onclick = () => {
+                currentQuestionIndex++;
+                loadQuestion();
+            };
+            nextContainer.appendChild(nextBtn);
+        }
+
+        // Final Sincere letter presentation screen
+        function showFinalLetter() {
+            document.getElementById('game-title').innerText = "A Note From Shreyan ✉️";
+            document.getElementById('question-text').innerText = "Shalini, this is straight from my heart:";
+            document.getElementById('animation-zone').style.display = 'none';
+            document.getElementById('next-container').innerHTML = '';
+            document.getElementById('options-container').innerHTML = '';
+
+            const letterDiv = document.createElement('div');
+            letterDiv.className = "final-letter";
+            letterDiv.innerText = `Shalini, i feel bad. I know i made mistakes and took you for granted sometimes. 
+
+I am scared since you once said you will be "ab khud khud se apne me". I am not scared that i will be alone, i am afraid of losing you. 
+
+We started off in a group and circumstances made us close friends, you are now a safe space for me and i am too for you. i just hope we will stay good friends and help each other and make good memories. 
+
+I miss you from the bottom of my heart. Just text me sometimes reels bhejom like in college kabhi kabhi. 
+
+Your bhai,
+Shreyan`;
+
+            document.getElementById('game-container').appendChild(letterDiv);
+        }
+
+        // Start the game loop on code load
+        loadQuestion();
+    </script>
+</body>
+</html>
